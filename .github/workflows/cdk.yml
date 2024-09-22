@@ -26,9 +26,6 @@ jobs:
         pip install aws-cdk-lib constructs
         npm install -g aws-cdk
 
-    - name: Navigate to infra folder
-      run: cd infra
-
     - name: Read environment configuration
       id: read-env-config
       run: |
@@ -44,12 +41,12 @@ jobs:
         role-session-name: GitHub_to_AWS_via_FederatedOIDC
         aws-region: ${{ env.aws_region }}
 
-    - name: Synth  Stack
+    - name: Synth Stack
       run: |
         cd infra
-        cdk synth --app "python infra.py" || { echo "cdk deploy failed"; exit 1; }
+        cdk synth --app "python infra.py" || { echo "cdk synth failed"; exit 1; }
 
-    - name: Deploy  Stack
+    - name: Deploy Stack
       run: |
         cd infra
         cdk deploy --app "python infra.py" || { echo "cdk deploy failed"; exit 1; }
