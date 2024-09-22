@@ -32,7 +32,7 @@ jobs:
     - name: Read environment configuration
       id: read-env-config
       run: |
-        CONFIG=$(jq -r ".${{ inputs.environment }}" ./infra/config.json)
+        CONFIG=$(jq -r ".${{ inputs.environment }}" ./infra/cdk.json)
         echo "aws_account=$(echo $CONFIG | jq -r '.aws_account')" >> $GITHUB_ENV
         echo "aws_region=$(echo $CONFIG | jq -r '.aws_region')" >> $GITHUB_ENV
         echo "aws_assume_role_arn=$(echo $CONFIG | jq -r '.aws_assume_role_arn')" >> $GITHUB_ENV
