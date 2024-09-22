@@ -43,18 +43,8 @@ jobs:
         role-to-assume: ${{ env.aws_assume_role_arn }}
         role-session-name: GitHub_to_AWS_via_FederatedOIDC
         aws-region: ${{ env.aws_region }}
-        
-    - name: Bootstrap CDK
-      run: |
-        cdk bootstrap aws://${{ env.aws_account }}/${{ env.aws_region }}
-      env:
-        aws_account: ${{ env.aws_account }}
-        aws_region: ${{ env.aws_region }}
 
     - name: Deploy Stack
       run: |
         cd infra
         cdk deploy
-      env:
-        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
