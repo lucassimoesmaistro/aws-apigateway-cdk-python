@@ -1,0 +1,59 @@
+name: Deploy API Gateway
+
+on:
+  workflow_call:
+    inputs:
+      environment:
+        type: string
+        required: true
+
+jobs:
+  jobApiGateway:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Setup Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.9'
+
+    - name: Install AWS CDK and dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install aws-cdk-lib
+        npm install -g aws-cdk
+
+    - name: Navigate to infra folder  # Navegar para o diretório correto
+      run: cd infra
+
+    - name: Bootstrap CDK (if necessary)
+      run: |
+        cd infra
+        cdk bootstrap
+
+    - name: Read environment configuration
+      id: read-env-config
+      run: |
+        CONFIG=$(jq -r ".${{ inputs.environment }}" ./infra/config.json)
+        echo "aws_account=$(echo $CONFIG | jq -r '.aws_account')" >> $GITHUB_ENV
+        echo "aws_region=$(echo $CONFIG | jq -r '.aws_region')" >> $GITHUB_ENV
+        echo "aws_assume_role_arn=$(echo $CONFIG | jq -r '.aws_assume_role_arn')" >> $GITHUB_ENV
+        echo "lambda_handler_arn=$(echo $CONFIG | jq -r '.lambda_handler_arn')" >> $GITHUB_ENV
+
+    - name: AWS Credentials
+      uses: aws-actions/configure-aws-credentials@v4
+      with:
+        role-to-assume: ${{ env.aws_assume_role_arn }}
+        role-session-name: GitHub_to_AWS_via_FederatedOIDC
+        aws-region: ${{ env.aws_region }}
+
+    - name: Deploy Stack
+      run: |
+        cd infra
+        cdk deploy
+      env:
+        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
