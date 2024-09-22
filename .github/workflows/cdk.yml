@@ -26,13 +26,16 @@ jobs:
         pip install aws-cdk-lib
         npm install -g aws-cdk
 
-    - name: Navigate to infra folder  # Navegar para o diretório correto
+    - name: Navigate to infra folder
       run: cd infra
 
     - name: Bootstrap CDK (if necessary)
       run: |
-        cd infra
-        cdk bootstrap
+        cdk bootstrap aws://${{ env.aws_account }}/${{ env.aws_region }}
+      env:
+        aws_account: ${{ env.aws_account }}
+        aws_region: ${{ env.aws_region }}
+    
 
     - name: Read environment configuration
       id: read-env-config
@@ -41,7 +44,6 @@ jobs:
         echo "aws_account=$(echo $CONFIG | jq -r '.aws_account')" >> $GITHUB_ENV
         echo "aws_region=$(echo $CONFIG | jq -r '.aws_region')" >> $GITHUB_ENV
         echo "aws_assume_role_arn=$(echo $CONFIG | jq -r '.aws_assume_role_arn')" >> $GITHUB_ENV
-        echo "lambda_handler_arn=$(echo $CONFIG | jq -r '.lambda_handler_arn')" >> $GITHUB_ENV
 
     - name: AWS Credentials
       uses: aws-actions/configure-aws-credentials@v4
