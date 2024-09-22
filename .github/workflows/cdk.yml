@@ -47,7 +47,7 @@ jobs:
     - name: Synth  Stack
       run: |
         cd infra
-        cdk deploy --app "python infra.py" || { echo "cdk deploy failed"; exit 1; }
+        cdk synth --app "python infra.py" || { echo "cdk deploy failed"; exit 1; }
 
     - name: Deploy  Stack
       run: |
