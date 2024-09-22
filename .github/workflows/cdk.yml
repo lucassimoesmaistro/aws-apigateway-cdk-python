@@ -29,14 +29,6 @@ jobs:
     - name: Navigate to infra folder
       run: cd infra
 
-    - name: Bootstrap CDK (if necessary)
-      run: |
-        cdk bootstrap aws://${{ env.aws_account }}/${{ env.aws_region }}
-      env:
-        aws_account: ${{ env.aws_account }}
-        aws_region: ${{ env.aws_region }}
-    
-
     - name: Read environment configuration
       id: read-env-config
       run: |
@@ -51,6 +43,13 @@ jobs:
         role-to-assume: ${{ env.aws_assume_role_arn }}
         role-session-name: GitHub_to_AWS_via_FederatedOIDC
         aws-region: ${{ env.aws_region }}
+        
+    - name: Bootstrap CDK
+      run: |
+        cdk bootstrap aws://${{ env.aws_account }}/${{ env.aws_region }}
+      env:
+        aws_account: ${{ env.aws_account }}
+        aws_region: ${{ env.aws_region }}
 
     - name: Deploy Stack
       run: |
