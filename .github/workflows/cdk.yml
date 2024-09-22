@@ -1,4 +1,4 @@
-name: Deploy API Gateway
+name: API Gateway
 
 on:
   workflow_call:
