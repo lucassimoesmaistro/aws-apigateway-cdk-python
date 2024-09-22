@@ -41,6 +41,10 @@ jobs:
         role-session-name: GitHub_to_AWS_via_FederatedOIDC
         aws-region: ${{ env.aws_region }}
 
+    - name: Bootstrap CDK Environment
+      run: |
+        cdk bootstrap --context aws_account=${{ env.aws_account }} --context aws_region=${{ env.aws_region }} || { echo "cdk bootstrap failed"; exit 1; }
+  
     - name: Synth Stack
       run: |
         cd infra
