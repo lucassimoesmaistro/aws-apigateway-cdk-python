@@ -1,5 +1,5 @@
 {
-    "app": "python app.py",
+    "app": "python infra.py",
     "dev": {
         "lambda_handler_arn": "arn:aws:lambda:region:account-id:function:lambda-dev-handler",
         "aws_account": 541128407328,
