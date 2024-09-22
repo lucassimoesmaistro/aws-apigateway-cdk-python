@@ -47,4 +47,4 @@ jobs:
     - name: Deploy Stack
       run: |
         cd infra
-        cdk deploy
+        cdk deploy --app "python infra.py"
