@@ -1,0 +1,19 @@
+name: "Development"
+
+on:
+  pull_request:
+    branches:
+      - develop
+    types:
+      - opened
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  cloudformation:
+    if: startsWith(github.head_ref, 'feature/')
+    uses: ./.github/workflows/cdk.yml
+    with:
+      environment: dev
