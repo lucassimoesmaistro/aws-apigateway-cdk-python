@@ -1,10 +1,11 @@
 from aws_cdk import (
     aws_apigateway as apigateway,
-    core
+    Stack
 )
+from constructs import Construct
 
-class ApiGatewayStack(core.Stack):
-    def __init__(self, scope: core.Construct, id: str, **kwargs) -> None:
+class ApiGatewayStack(Stack):
+    def __init__(self, scope: Construct, id: str, **kwargs) -> None:
         super().__init__(scope, id, **kwargs)
 
         api = apigateway.RestApi(self, "ApiGateway",
@@ -35,4 +36,3 @@ class ApiGatewayStack(core.Stack):
                                          'application/json': apigateway.Model.EMPTY_MODEL
                                      }
                                  }])
-
