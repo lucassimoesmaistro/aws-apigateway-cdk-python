@@ -10,4 +10,3 @@
       "lambda_handler_arn": "arn:aws:lambda:region:account-id:function:lambda-prod-handler"
     }
 }
-  

@@ -1,6 +1,7 @@
 from aws_cdk import (
     aws_apigateway as apigateway,
-    Stack
+    App,
+    Stack,
 )
 from constructs import Construct
 
@@ -36,3 +37,7 @@ class ApiGatewayStack(Stack):
                                          'application/json': apigateway.Model.EMPTY_MODEL
                                      }
                                  }])
+
+app = App()
+ApiGatewayStack(app, "ApiGatewayStack")
+app.synth()
