@@ -44,8 +44,12 @@ jobs:
         role-session-name: GitHub_to_AWS_via_FederatedOIDC
         aws-region: ${{ env.aws_region }}
 
-    - name: Deploy Stack
+    - name: Synth  Stack
       run: |
         cd infra
-        cdk synth --app "python infra.py"
-        cdk deploy --app "python infra.py"
+        cdk deploy --app "python infra.py" || { echo "cdk deploy failed"; exit 1; }
+
+    - name: Deploy  Stack
+      run: |
+        cd infra
+        cdk deploy --app "python infra.py" || { echo "cdk deploy failed"; exit 1; }
