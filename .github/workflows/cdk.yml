@@ -1,14 +1,11 @@
 name: Deploy API Gateway
 
 on:
-    workflow_call:
-      inputs:
-        environment:
-          type: string
-          required: true
-
-env:
-  AWS_REGION: us-east-1
+  workflow_call:
+    inputs:
+      environment:
+        type: string
+        required: true
 
 jobs:
   jobApiGateway:
@@ -29,8 +26,13 @@ jobs:
         pip install aws-cdk-lib
         npm install -g aws-cdk
 
+    - name: Navigate to infra folder  # Navegar para o diretório correto
+      run: cd infra
+
     - name: Bootstrap CDK (if necessary)
-      run: cdk bootstrap
+      run: |
+        cd infra
+        cdk bootstrap
 
     - name: Read environment configuration
       id: read-env-config
@@ -39,6 +41,7 @@ jobs:
         echo "aws_account=$(echo $CONFIG | jq -r '.aws_account')" >> $GITHUB_ENV
         echo "aws_region=$(echo $CONFIG | jq -r '.aws_region')" >> $GITHUB_ENV
         echo "aws_assume_role_arn=$(echo $CONFIG | jq -r '.aws_assume_role_arn')" >> $GITHUB_ENV
+        echo "lambda_handler_arn=$(echo $CONFIG | jq -r '.lambda_handler_arn')" >> $GITHUB_ENV
 
     - name: AWS Credentials
       uses: aws-actions/configure-aws-credentials@v4
@@ -49,10 +52,8 @@ jobs:
 
     - name: Deploy Stack
       run: |
-        if [ "${{ github.ref }}" == "refs/heads/main" ]; then
-          cdk deploy --context lambda_handler_arn=${{ secrets.LAMBDA_PROD_ARN }}
-        else
-          cdk deploy --context lambda_handler_arn=${{ secrets.LAMBDA_DEV_ARN }}
+        cd infra
+        cdk deploy
       env:
         AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
         AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
