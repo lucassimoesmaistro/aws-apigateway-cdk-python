@@ -1,7 +1,11 @@
 {
   "app": "python infra.py",
+  "context": {
+    "lambda_handler_arn": "arn:aws:lambda:eu-central-1:541128407328:function:SamLambdaStoreName-StoreNameFunction-vs9uqhYeglaV",
+    "lambda_name": "SamLambdaStoreName-StoreNameFunction-vs9uqhYeglaV"
+  },
   "dev": {
-      "lambda_handler_arn": "arn:aws:lambda:region:account-id:function:lambda-dev-handler",
+      "lambda_handler_arn": "",
       "aws_account": 541128407328,
       "aws_region": "eu-central-1",
       "aws_assume_role_arn": "arn:aws:iam::541128407328:role/role-githubactions"
